@@ -16,6 +16,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import AuthNavigation from "@/components/AuthNavigation";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -29,6 +30,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const {
     register,
@@ -43,15 +45,12 @@ const Login = () => {
     setError("");
 
     try {
-      // Simulate API call - replace with real login
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      if (data.email && data.password) {
-        // Simulate success - replace with real auth logic
-        localStorage.setItem("user", JSON.stringify({ email: data.email }));
+      const result = await login(data.email, data.password);
+      
+      if (result.success) {
         navigate("/");
       } else {
-        setError("Invalid email or password");
+        setError(result.error || "Login failed. Please try again.");
       }
     } catch (err) {
       setError("Something went wrong. Please try again.");

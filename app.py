@@ -8,6 +8,7 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 import re
 from typing import Dict, List, Any
+from firebase_auth import require_firebase_auth, optional_firebase_auth
 
 # Load environment variables
 load_dotenv()
@@ -192,7 +193,32 @@ def health_check():
         "version": "1.0.0"
     })
 
+@app.route('/user', methods=['GET'])
+@require_firebase_auth
+def get_user_info():
+    """Get current user information"""
+    try:
+        user_info = {
+            'uid': request.user.get('uid'),
+            'email': request.user.get('email'),
+            'name': request.user.get('name'),
+            'email_verified': request.user.get('email_verified', False),
+            'picture': request.user.get('picture')
+        }
+        
+        return jsonify({
+            "status": "success",
+            "user": user_info
+        })
+    except Exception as e:
+        logger.error(f"Error getting user info: {str(e)}")
+        return jsonify({
+            "error": "Failed to get user information",
+            "status": "error"
+        }), 500
+
 @app.route('/analyze', methods=['POST'])
+@require_firebase_auth
 def analyze_medical_report():
     """
     Analyze medical report endpoint
@@ -241,7 +267,8 @@ def analyze_medical_report():
             'filename': filename,
             'analysisTimestamp': datetime.now().isoformat(),
             'reportLength': len(report_text),
-            'aiModel': 'gemini-1.5-flash'
+            'aiModel': 'gemini-1.5-flash',
+            'userId': request.user.get('uid') if hasattr(request, 'user') and request.user else None
         }
         
         return jsonify({
@@ -258,6 +285,7 @@ def analyze_medical_report():
         }), 500
 
 @app.route('/analyze/file', methods=['POST'])
+@require_firebase_auth
 def analyze_medical_file():
     """
     Analyze uploaded medical file endpoint
@@ -315,7 +343,8 @@ def analyze_medical_file():
             'filename': file.filename,
             'analysisTimestamp': datetime.now().isoformat(),
             'reportLength': len(content),
-            'aiModel': 'gemini-1.5-flash'
+            'aiModel': 'gemini-1.5-flash',
+            'userId': request.user.get('uid') if hasattr(request, 'user') and request.user else None
         }
         
         return jsonify({

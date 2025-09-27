@@ -1,23 +1,18 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-interface User {
-  email: string;
-  firstName?: string;
-  lastName?: string;
-}
+import { FirebaseAuthService, AuthUser, SignupData, LoginData } from '@/lib/auth';
 
 interface AuthContextType {
-  user: User | null;
+  user: AuthUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signup: (userData: {
     firstName: string;
     lastName: string;
     email: string;
     password: string;
-  }) => Promise<boolean>;
-  logout: () => void;
+  }) => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,44 +22,32 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check for existing session on app load
+  // Listen to Firebase authentication state changes
   useEffect(() => {
-    const checkAuthStatus = () => {
-      try {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
-      } catch (error) {
-        console.error('Error checking auth status:', error);
-        localStorage.removeItem('user');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    const unsubscribe = FirebaseAuthService.onAuthStateChange((user) => {
+      setUser(user);
+      setIsLoading(false);
+    });
 
-    checkAuthStatus();
+    return () => unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
-      // Simulate API call - replace with actual authentication logic
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const result = await FirebaseAuthService.login({ email, password });
       
-      // For demo purposes, accept any valid email/password combination
-      if (email && password) {
-        const userData: User = { email };
-        setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
-        return true;
+      if (result.user) {
+        setUser(result.user);
+        return { success: true };
+      } else {
+        return { success: false, error: result.error };
       }
-      return false;
     } catch (error) {
       console.error('Login error:', error);
-      return false;
+      return { success: false, error: 'An unexpected error occurred during login.' };
     }
   };
 
@@ -73,30 +56,43 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     lastName: string;
     email: string;
     password: string;
-  }): Promise<boolean> => {
+  }): Promise<{ success: boolean; error?: string }> => {
     try {
-      // Simulate API call - replace with actual registration logic
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // For demo purposes, simulate successful registration
-      const newUser: User = {
-        email: userData.email,
+      const signupData: SignupData = {
         firstName: userData.firstName,
         lastName: userData.lastName,
+        email: userData.email,
+        password: userData.password,
       };
+
+      const result = await FirebaseAuthService.signup(signupData);
       
-      setUser(newUser);
-      localStorage.setItem('user', JSON.stringify(newUser));
-      return true;
+      if (result.user) {
+        setUser(result.user);
+        return { success: true };
+      } else {
+        return { success: false, error: result.error };
+      }
     } catch (error) {
       console.error('Signup error:', error);
-      return false;
+      return { success: false, error: 'An unexpected error occurred during signup.' };
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
+  const logout = async (): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const result = await FirebaseAuthService.logout();
+      
+      if (result.error) {
+        return { success: false, error: result.error };
+      } else {
+        setUser(null);
+        return { success: true };
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      return { success: false, error: 'An unexpected error occurred during logout.' };
+    }
   };
 
   const value: AuthContextType = {

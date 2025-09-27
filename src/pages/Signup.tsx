@@ -11,6 +11,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
 import AuthNavigation from "@/components/AuthNavigation";
 import { Eye, EyeOff, Loader2, CheckCircle } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const signupSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
@@ -35,6 +36,7 @@ const Signup = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
+  const { signup } = useAuth();
 
   const {
     register,
@@ -52,16 +54,22 @@ const Signup = () => {
     setError("");
 
     try {
-      // Simulate API call - replace with actual registration logic
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const result = await signup({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password,
+      });
       
-      // For demo purposes, simulate successful registration
-      setSuccess(true);
-      
-      // Auto redirect after showing success message
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
+      if (result.success) {
+        setSuccess(true);
+        // Auto redirect after showing success message
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      } else {
+        setError(result.error || "Registration failed. Please try again.");
+      }
     } catch (err) {
       setError("An error occurred during registration. Please try again.");
     } finally {
