@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { MedicalAnalyzer } from "@/components/MedicalAnalyzer";
 import { ResultsDisplay } from "@/components/ResultsDisplay";
-import { Heart, ShieldCheck, FileText } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import { Heart, ShieldCheck, FileText, LogOut, User } from "lucide-react";
 import heroImage from "@/assets/hero-medical.jpg";
 
 export interface AnalysisResult {
@@ -21,6 +23,7 @@ export interface AnalysisResult {
 const Index = () => {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const { user, logout } = useAuth();
 
   const handleAnalyzeReport = async (reportText: string, fileName?: string) => {
     setIsAnalyzing(true);
@@ -99,6 +102,33 @@ const Index = () => {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-background to-medical-light">
+      {/* Header with User Info and Logout */}
+      <header className="bg-card border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2 text-primary">
+              <Heart className="h-6 w-6" />
+              <span className="text-lg font-semibold">HealthTranslate</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <User className="h-4 w-4" />
+                <span>{user?.email}</span>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={logout}
+                className="flex items-center gap-2"
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
+              </Button>
+            </div>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
