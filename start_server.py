@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Startup script for Medical Report Analyzer API
+Startup script for Glacier Care API
 """
 
 import os
@@ -24,7 +24,7 @@ def check_environment():
 
 def main():
     """Main startup function"""
-    print("🏥 Starting Medical Report Analyzer API...")
+    print("🏥 Starting Glacier Care API...")
     print("=" * 45)
     
     # Check environment

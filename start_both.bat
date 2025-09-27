@@ -1,5 +1,5 @@
 @echo off
-echo Starting Medical Report Analyzer - Full Stack Application
+echo Starting Glacier Care - Full Stack Application
 echo ========================================================
 
 echo.

@@ -161,7 +161,7 @@ const Login = () => {
             <p className="text-sm text-muted-foreground text-center">
               <strong>Demo credentials:</strong>
               <br />
-              Email: demo@healthtranslate.com
+              Email: demo@glaciercare.com
               <br />
               Password: demo123
             </p>

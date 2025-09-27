@@ -11,7 +11,7 @@ const AuthNavigation: React.FC<AuthNavigationProps> = ({ currentPage }) => {
     <div className="flex items-center justify-between w-full max-w-md">
       <Link to="/" className="flex items-center gap-2 text-primary hover:opacity-80 transition-opacity">
         <Heart className="h-6 w-6" />
-        <span className="text-lg font-semibold">HealthTranslate</span>
+        <span className="text-lg font-semibold">Glacier Care</span>
       </Link>
       
       <div className="flex gap-2">

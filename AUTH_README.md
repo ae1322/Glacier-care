@@ -1,6 +1,6 @@
 # Authentication System
 
-This document explains the authentication system that has been added to your HealthTranslate application.
+This document explains the authentication system that has been added to your Glacier Care application.
 
 ## Features
 
@@ -58,7 +58,7 @@ src/
 ## Demo Credentials
 
 For testing purposes, you can use any email/password combination:
-- **Email**: `demo@healthtranslate.com`
+- **Email**: `demo@glaciercare.com`
 - **Password**: `demo123`
 
 Or any valid email format with any password (minimum 6 characters for login, 8 characters for signup).

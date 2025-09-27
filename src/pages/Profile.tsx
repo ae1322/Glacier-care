@@ -93,7 +93,7 @@ const Profile = () => {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2 text-primary">
               <Heart className="h-6 w-6" />
-              <span className="text-lg font-semibold">HealthTranslate</span>
+              <span className="text-lg font-semibold">Glacier Care</span>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -296,7 +296,7 @@ const Profile = () => {
                   Usage Statistics
                 </CardTitle>
                 <CardDescription>
-                  Your activity on HealthTranslate
+                  Your activity on Glacier Care
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">

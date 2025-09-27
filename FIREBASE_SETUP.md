@@ -1,6 +1,6 @@
 # Firebase Authentication Setup Guide
 
-This guide will help you set up Firebase Authentication for the Medical Report Analyzer application.
+This guide will help you set up Firebase Authentication for the Glacier Care application.
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@ This guide will help you set up Firebase Authentication for the Medical Report A
 
 1. Go to the [Firebase Console](https://console.firebase.google.com/)
 2. Click "Create a project" or "Add project"
-3. Enter a project name (e.g., "medical-report-analyzer")
+3. Enter a project name (e.g., "glacier-care")
 4. Choose whether to enable Google Analytics (optional)
 5. Click "Create project"
 

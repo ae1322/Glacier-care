@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Simple script to run the Medical Report Analyzer API
+Simple script to run the Glacier Care API
 """
 
 import os
@@ -12,7 +12,7 @@ os.environ['GEMINI_API_KEY'] = 'AIzaSyDoic239xATtrO8BSsl2jvrudumFUJHs84'
 # Import and run the Flask app
 try:
     from app import app
-    print("🏥 Medical Report Analyzer API")
+    print("🏥 Glacier Care API")
     print("=" * 40)
     print("✅ Gemini API Key: Configured")
     print("🚀 Starting server on http://localhost:5000")

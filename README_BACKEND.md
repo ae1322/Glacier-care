@@ -1,4 +1,4 @@
-# Medical Report Analyzer API
+# Glacier Care API
 
 A Flask-based backend API that integrates with Google's Gemini AI to analyze medical reports and provide clear, easy-to-understand explanations for patients.
 

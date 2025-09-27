@@ -28,7 +28,7 @@ if not GEMINI_API_KEY:
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-2.5-flash')
 
-class MedicalReportAnalyzer:
+class GlacierCareAnalyzer:
     def __init__(self):
         self.model = model
     
@@ -182,14 +182,14 @@ Respond with ONLY the JSON object, no additional text or formatting.
         }
 
 # Initialize the analyzer
-analyzer = MedicalReportAnalyzer()
+analyzer = GlacierCareAnalyzer()
 
 @app.route('/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
     return jsonify({
         "status": "healthy",
-        "service": "Medical Report Analyzer",
+        "service": "Glacier Care",
         "version": "1.0.0"
     })
 
@@ -380,7 +380,7 @@ if __name__ == '__main__':
         logger.error("GEMINI_API_KEY environment variable is not set")
         exit(1)
     
-    logger.info("Starting Medical Report Analyzer API...")
+    logger.info("Starting Glacier Care API...")
     logger.info(f"Gemini API configured: {GEMINI_API_KEY[:10]}...")
     
     # Run the Flask app

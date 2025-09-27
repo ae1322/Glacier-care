@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test script for Medical Report Analyzer API
+Test script for Glacier Care API
 """
 
 import requests
@@ -117,7 +117,7 @@ def test_error_handling():
 
 def main():
     """Run all tests"""
-    print("🧪 Medical Report Analyzer API Tests")
+    print("🧪 Glacier Care API Tests")
     print("=" * 40)
     
     # Test health check

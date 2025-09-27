@@ -103,7 +103,7 @@ After setup:
 ## 📱 **Demo Credentials (After Setup)**
 
 Once Firebase is configured, you can use these demo credentials:
-- **Email:** demo@healthtranslate.com
+- **Email:** demo@glaciercare.com
 - **Password:** demo123
 
 ---

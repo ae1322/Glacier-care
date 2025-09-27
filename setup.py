@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Setup script for Medical Report Analyzer API
+Setup script for Glacier Care API
 """
 
 import os
@@ -55,7 +55,7 @@ def check_gemini_key():
 
 def main():
     """Main setup function"""
-    print("🏥 Medical Report Analyzer API Setup")
+    print("🏥 Glacier Care API Setup")
     print("=" * 40)
     
     # Install requirements

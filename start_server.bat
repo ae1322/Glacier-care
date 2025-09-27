@@ -1,5 +1,5 @@
 @echo off
-echo Starting Medical Report Analyzer API...
+echo Starting Glacier Care API...
 echo =====================================
 
 REM Check if Python is installed

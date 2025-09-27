@@ -110,7 +110,7 @@ const Index = () => {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2 text-primary">
               <Heart className="h-6 w-6" />
-              <span className="text-lg font-semibold">HealthTranslate</span>
+              <span className="text-lg font-semibold">Glacier Care</span>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -147,7 +147,7 @@ const Index = () => {
             <div className="space-y-8">
               <div className="flex items-center gap-2 text-primary">
                 <Heart className="h-8 w-8" />
-                <span className="text-xl font-semibold">HealthTranslate</span>
+                <span className="text-xl font-semibold">Glacier Care</span>
               </div>
               
               <div className="space-y-6">
