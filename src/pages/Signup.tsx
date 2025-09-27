@@ -21,7 +21,12 @@ const signupSchema = z.object({
     .min(8, "Password must be at least 8 characters")
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Password must contain at least one uppercase letter, one lowercase letter, and one number"),
   confirmPassword: z.string(),
-  agreeToTerms: z.boolean().refine(val => val === true, "You must agree to the terms and conditions"),
+  agreeToTerms: z.union([z.boolean(), z.string()]).transform((val) => {
+    // Handle both boolean and string values from checkbox
+    if (typeof val === 'boolean') return val;
+    if (typeof val === 'string') return val === 'on' || val === 'true';
+    return false;
+  }).refine(val => val === true, "You must agree to the terms and conditions"),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
@@ -43,6 +48,7 @@ const Signup = () => {
     handleSubmit,
     formState: { errors },
     watch,
+    setValue,
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
   });

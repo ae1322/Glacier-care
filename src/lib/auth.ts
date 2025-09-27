@@ -43,6 +43,14 @@ export class FirebaseAuthService {
   // Sign up a new user
   static async signup(data: SignupData): Promise<{ user: AuthUser; error: null } | { user: null; error: string }> {
     try {
+      // Check if Firebase is properly configured
+      if (!auth.app.options.apiKey || auth.app.options.apiKey === "demo-api-key") {
+        return { 
+          user: null, 
+          error: "Firebase is not configured. Please set up your Firebase project and add the configuration to .env file. See FIREBASE_SETUP.md for instructions." 
+        };
+      }
+
       const userCredential: UserCredential = await createUserWithEmailAndPassword(
         auth,
         data.email,
@@ -61,6 +69,7 @@ export class FirebaseAuthService {
       return { user: authUser, error: null };
     } catch (error) {
       const authError = error as AuthError;
+      console.error('Firebase signup error:', authError);
       return { user: null, error: this.getErrorMessage(authError) };
     }
   }
@@ -68,6 +77,14 @@ export class FirebaseAuthService {
   // Sign in an existing user
   static async login(data: LoginData): Promise<{ user: AuthUser; error: null } | { user: null; error: string }> {
     try {
+      // Check if Firebase is properly configured
+      if (!auth.app.options.apiKey || auth.app.options.apiKey === "demo-api-key") {
+        return { 
+          user: null, 
+          error: "Firebase is not configured. Please set up your Firebase project and add the configuration to .env file. See FIREBASE_SETUP.md for instructions." 
+        };
+      }
+
       const userCredential: UserCredential = await signInWithEmailAndPassword(
         auth,
         data.email,
@@ -86,6 +103,7 @@ export class FirebaseAuthService {
       return { user: authUser, error: null };
     } catch (error) {
       const authError = error as AuthError;
+      console.error('Firebase login error:', authError);
       return { user: null, error: this.getErrorMessage(authError) };
     }
   }

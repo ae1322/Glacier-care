@@ -3,7 +3,8 @@ import { MedicalAnalyzer } from "@/components/MedicalAnalyzer";
 import { ResultsDisplay } from "@/components/ResultsDisplay";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Heart, ShieldCheck, FileText, LogOut, User } from "lucide-react";
+import { Heart, ShieldCheck, FileText, LogOut, User, Settings } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-medical.jpg";
 
 export interface AnalysisResult {
@@ -24,6 +25,7 @@ const Index = () => {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleAnalyzeReport = async (reportText: string, fileName?: string) => {
     setIsAnalyzing(true);
@@ -115,6 +117,15 @@ const Index = () => {
                 <User className="h-4 w-4" />
                 <span>{user?.email}</span>
               </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/profile')}
+                className="flex items-center gap-2"
+              >
+                <Settings className="h-4 w-4" />
+                Profile
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
