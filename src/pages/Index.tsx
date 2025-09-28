@@ -31,7 +31,6 @@ const Index = () => {
     setIsAnalyzing(true);
     
     try {
-      // Call the Flask API for real AI analysis
       const response = await fetch('http://localhost:5000/analyze', {
         method: 'POST',
         headers: {
@@ -48,8 +47,7 @@ const Index = () => {
       if (result.status === 'success') {
         setAnalysisResult(result.data);
       } else {
-        console.log('Analysis failed this:', result.error);
-        console.error('Analysis failed:', result.error);
+        console.log('Analysis failed:', result.error);
         // Fallback to mock data if API fails
         const fallbackResult: AnalysisResult = {
           keyFindings: [
@@ -79,6 +77,76 @@ const Index = () => {
       const fallbackResult: AnalysisResult = {
         keyFindings: [
           "Network error occurred during analysis",
+          "Please check your connection and try again"
+        ],
+        explanations: [
+          "Unable to connect to the analysis service",
+          "This is a temporary network issue"
+        ],
+        recommendations: [
+          "Check your internet connection",
+          "Try again in a few moments",
+          "Contact your healthcare provider if urgent"
+        ],
+        urgentCare: [
+          "If you have urgent health concerns, contact your doctor immediately"
+        ],
+        medicationDetails: [],
+        riskLevel: 'moderate'
+      };
+      setAnalysisResult(fallbackResult);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  const handleFileAnalyze = async (file: File) => {
+    setIsAnalyzing(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch('http://localhost:5000/analyze/file', {
+        method: 'POST',
+        body: formData
+      });
+      
+      const result = await response.json();
+      
+      if (result.status === 'success') {
+        setAnalysisResult(result.data);
+      } else {
+        console.log('File analysis failed:', result.error);
+        // Fallback to mock data if API fails
+        const fallbackResult: AnalysisResult = {
+          keyFindings: [
+            "Unable to analyze file at this time",
+            "Please try again or contact support"
+          ],
+          explanations: [
+            "The AI analysis service is temporarily unavailable",
+            "This is a technical issue and does not reflect on your health status"
+          ],
+          recommendations: [
+            "Try uploading your file again",
+            "Contact your healthcare provider for analysis",
+            "Keep a copy of your file for your records"
+          ],
+          urgentCare: [
+            "If you have urgent health concerns, contact your doctor immediately"
+          ],
+          medicationDetails: [],
+          riskLevel: 'moderate'
+        };
+        setAnalysisResult(fallbackResult);
+      }
+    } catch (error) {
+      console.error('Error analyzing file:', error);
+      // Fallback to mock data if network error
+      const fallbackResult: AnalysisResult = {
+        keyFindings: [
+          "Network error occurred during file analysis",
           "Please check your connection and try again"
         ],
         explanations: [
@@ -191,7 +259,7 @@ const Index = () => {
       {/* Main Application */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto space-y-8">
-          <MedicalAnalyzer onAnalyze={handleAnalyzeReport} isAnalyzing={isAnalyzing} />
+          <MedicalAnalyzer onAnalyze={handleAnalyzeReport} onFileAnalyze={handleFileAnalyze} isAnalyzing={isAnalyzing} />
           
           {analysisResult && (
             <ResultsDisplay result={analysisResult} />

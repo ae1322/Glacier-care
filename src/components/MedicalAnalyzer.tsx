@@ -8,10 +8,11 @@ import { useToast } from "@/hooks/use-toast";
 
 interface MedicalAnalyzerProps {
   onAnalyze: (reportText: string, fileName?: string) => void;
+  onFileAnalyze: (file: File) => void;
   isAnalyzing: boolean;
 }
 
-export const MedicalAnalyzer = ({ onAnalyze, isAnalyzing }: MedicalAnalyzerProps) => {
+export const MedicalAnalyzer = ({ onAnalyze, onFileAnalyze, isAnalyzing }: MedicalAnalyzerProps) => {
   const [reportText, setReportText] = useState("");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -19,7 +20,11 @@ export const MedicalAnalyzer = ({ onAnalyze, isAnalyzing }: MedicalAnalyzerProps
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (reportText.trim() || uploadedFile) {
+    if (uploadedFile && !reportText.includes('[IMAGE FILE]') && !reportText.includes('[DOCUMENT FILE]')) {
+      // If we have a file and it's not already processed, send the file
+      onFileAnalyze(uploadedFile);
+    } else if (reportText.trim()) {
+      // If we have text content, analyze it
       onAnalyze(reportText, uploadedFile?.name);
     }
   };
@@ -60,16 +65,36 @@ export const MedicalAnalyzer = ({ onAnalyze, isAnalyzing }: MedicalAnalyzerProps
 
     setUploadedFile(file);
     
-    // For text files, read content directly
-    if (file.type === 'text/plain') {
-      const text = await file.text();
-      setReportText(text);
-    } else {
-      // For other files, show filename and clear text area
-      setReportText(`Uploaded file: ${file.name}`);
+    try {
+      // For text files, read content directly
+      if (file.type === 'text/plain') {
+        const text = await file.text();
+        setReportText(text);
+        toast({
+          title: "Text file loaded",
+          description: `${file.name} content loaded for analysis`,
+        });
+      } else if (file.type.startsWith('image/')) {
+        // For images, we'll send the file to the backend for processing
+        setReportText(`[IMAGE FILE] ${file.name} - Ready for analysis`);
+        toast({
+          title: "Image uploaded",
+          description: `${file.name} is ready for analysis`,
+        });
+      } else {
+        // For PDF and DOC files, show filename and let backend handle it
+        setReportText(`[DOCUMENT FILE] ${file.name} - Ready for analysis`);
+        toast({
+          title: "Document uploaded",
+          description: `${file.name} is ready for analysis`,
+        });
+      }
+    } catch (error) {
+      console.error('Error reading file:', error);
       toast({
-        title: "File uploaded successfully",
-        description: `${file.name} is ready for analysis`,
+        title: "Error reading file",
+        description: "Could not read the file content",
+        variant: "destructive",
       });
     }
   };
